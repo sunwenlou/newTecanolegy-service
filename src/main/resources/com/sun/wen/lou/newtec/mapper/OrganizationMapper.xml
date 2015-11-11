@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.sun.wen.lou.newtec.mapper.OrganizationMapper">
+
+	<sql id="Base_Column_List">
+		id ,
+		name ,
+		parent_id ,
+		parent_ids ,
+		available
+	</sql>
+
+
+	<insert id="createOrganization" parameterType="Organization">
+		INSERT INTO sys_organization (
+
+		<if test="name!=null and name!=''">
+			name ,
+		</if>
+		<if test="parentId!=null and parentId!=''">
+			parent_id ,
+		</if>
+		<if test="parentIds!=null and parentIds!=''">
+			parent_ids ,
+		</if>
+		<if test="available!=null and available!=''">
+			available
+		</if>
+		) VALUES (
+		<if test="name!=null and name!=''">
+			#{name} ,
+		</if>
+		<if test="parentId!=null and parentId!=''">
+			#{parentId} ,
+		</if>
+		<if test="parentIds!=null and parentIds!=''">
+			#{parentIds} ,
+		</if>
+		<if test="available!=null and available!=''">
+			#{available}
+		</if>
+		)
+	</insert>
+
+
+	<update id="updateOrganization" parameterType="Organization">
+		UPDATE sys_organization SET
+		<if test="name!=null and name!=''">
+			name =#{name},
+		</if>
+		<if test="parentId!=null and parentId!=''">
+			parent_id = #{parentId},
+		</if>
+		<if test="parentIds!=null and parentIds!=''">
+			parent_ids = #{parentIds},
+		</if>
+		<if test="available!=null and available!=''">
+			available = #{available}
+		</if>
+		WHERE
+		<if test="id!=null and id!=''">
+			id = #{id}
+		</if>
+	</update>
+
+
+	<update id="updateOrganizationMany">
+		update sys_organization set
+		parent_ids=concat(#{tarparentids}, substring(parent_ids,
+		length(#{sourceparentids}))) where parent_ids like
+		CONCAT(CONCAT('%',
+		#{sourceparentids}),'%')
+	</update>
+
+
+	<select id="findOne" resultType="Organization" parameterType="long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_organization
+		WHERE id = #{organizationId}
+	</select>
+
+
+	<select id="findAllWithExclude" resultType="Organization"
+		parameterType="Organization">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_organization
+		where id!=#{id} 
+	</select>
+
+
+	<select id="findAll" resultType="Organization">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_organization
+	</select>
+
+	<select id="listOrganzation" resultType="Organization"
+		parameterType="Organization">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_organization
+		where 1=1
+		<if test="organization.name!=null and organization.name!=''">
+			and name =#{organization.name},
+		</if>
+		<if test="organization.available!=null and organization.available!=''">
+			and available = #{organization.available}
+		</if>
+
+	</select>
+	<delete id="deleteOrganization" parameterType="long">
+		delete from
+		sys_organization where id=#{organizationId}
+	</delete>
+</mapper>
+

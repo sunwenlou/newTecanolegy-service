@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.sun.wen.lou.newtec.mapper.UserAccountMapper">
+
+	<sql id="Base_Column_List">
+		user_account_id ,
+		user_account_name ,
+		DEPT ,
+		COMPANY ,
+		CREATE_DATE ,
+		STS ,
+		IS_ADMIN,
+		JOBNAME,
+		EMAIL
+	</sql>
+
+
+	<!-- 批量添加 -->
+	<insert id="addByBatch" parameterType="java.util.List">
+		insert into user_account
+		(
+		user_account_id ,
+		user_account_name ,
+		DEPT ,
+		COMPANY ,
+		CREATE_DATE ,
+		STS ,
+		IS_ADMIN,
+		JOBNAME,
+		EMAIL
+		)
+		<foreach collection="list" item="item" index="index"
+			separator="union">
+			SELECT
+			#{item.userAccountId} ,
+			#{item.userAccountName} ,
+			#{item.dept} ,
+			#{item.company} ,
+			#{item.createDate} ,
+			#{item.sts} ,
+			#{item.createDate} ,
+			#{item.isAdmin} ,
+			#{item.jobName} ,
+			#{item.email}
+			FROM DUAL
+		</foreach>
+	</insert>
+	<insert id="save" parameterType="UserAccountDTO">
+		INSERT INTO user_account (
+
+		<if test="userAccountName!=null and userAccountName!=''">
+			user_account_name ,
+		</if>
+		<if test="dept!=null and dept!=''">
+			DEPT ,
+		</if>
+		<if test="company!=null and company!=''">
+			COMPANY ,
+		</if>
+		<if test="createDate!=null and createDate!=''">
+			CREATE_DATE ,
+		</if>
+		<if test="sts!=null and sts!=''">
+			STS ,
+		</if>
+		<if test="isAdmin!=null and isAdmin!=''">
+			IS_ADMIN,
+		</if>
+		<if test="email!=null and email!=''">
+			EMAIL,
+		</if>
+		<if test="jobName!=null and jobName!=''">
+			JOBNAME,
+		</if>
+		<if test="userAccountId!=null and userAccountId!=''">
+			user_account_id
+		</if>
+		) VALUES (
+		<if test="userAccountName!=null and userAccountName!=''">
+			#{userAccountName} ,
+		</if>
+		<if test="dept!=null and dept!=''">
+			#{dept} ,
+		</if>
+		<if test="company!=null and company!=''">
+			#{company} ,
+		</if>
+		<if test="createDate!=null and createDate!=''">
+			#{createDate} ,
+		</if>
+		<if test="sts!=null and sts!=''">
+			#{sts} ,
+		</if>
+		<if test="isAdmin!=null and isAdmin!=''">
+			#{isAdmin},
+		</if>
+		<if test="email!=null and email!=''">
+			#{email},
+		</if>
+		<if test="jobName!=null and jobName!=''">
+			#{jobName},
+		</if>
+		<if test="userAccountId!=null and userAccountId!=''">
+			#{userAccountId}
+		</if>
+		)
+	</insert>
+	<select id="queryByUserName" parameterType="string" resultType="UserAccount">
+		select * from user_account where user_account_name=#{username}
+	</select>
+	<select id="queryUserAccount" parameterType="UserAccount" resultType="UserAccount">
+	select * from user_account where user_account_name=#{userAccountName} and pwd=#{pwd}
+	</select>
+	<update id="update" parameterType="UserAccountDTO">
+		UPDATE user_account SET
+		<if test="userAccountName!=null and userAccountName!=''">
+			user_account_name =#{userAccountName},
+		</if>
+		<if test="dept!=null and dept!=''">
+			DEPT = #{dept},
+		</if>
+		<if test="company!=null and company!=''">
+			COMPANY = #{company},
+		</if>
+		<if test="createDate!=null and createDate!=''">
+			CREATE_DATE = #{createDate},
+		</if>
+		<if test="stsDate!=null and stsDate!=''">
+			STS_DATE = #{stsDate},
+		</if>
+		<if test="isAdmin!=null and isAdmin!=''">
+			IS_ADMIN = #{isAdmin},
+		</if>
+		<if test="email!=null and email!=''">
+			EMAIL = #{email},
+		</if>
+		<if test="jobName!=null and jobName!=''">
+			JOBNAME=#{jobName},
+		</if>
+		<if test="sts!=null and sts!=''">
+			STS = #{sts}
+		</if>
+		WHERE
+		<if test="userAccountId!=null and userAccountId!=''">
+			user_account_id = #{userAccountId}
+		</if>
+	</update>
+
+	<update id="updateSts" parameterType="UserAccountDTO">
+
+
+		UPDATE user_account SET
+		STS = #{sts}
+		WHERE 1=1
+		<if test="userAccountId!=null and userAccountId!=''">
+			and user_account_id = #{userAccountId}
+		</if>
+	</update>
+
+
+
+	<select id="queryList" resultType="UserAccountDTO"
+		parameterType="UserAccountDTO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM user_account
+		WHERE
+		IS_ADMIN !='A' and STS !='P'
+		<if
+			test="UserAccountDTO.userAccountName!=null and UserAccountDTO.userAccountName!=''">
+			and user_account_name like CONCAT(CONCAT('%',
+			#{UserAccountDTO.userAccountName}),'%')
+		</if>
+		<if test="UserAccountDTO.email!=null and UserAccountDTO.email!=''">
+			and EMAIL like CONCAT(CONCAT('%',
+			#{UserAccountDTO.email}),'%')
+		</if>
+		<if test="UserAccountDTO.beginDate!=null and UserAccountDTO.beginDate!='' ">
+		<![CDATA[  and user_account.create_date  >=to_date(#{UserAccountDTO.beginDate},'yyyy-mm-dd hh24:Mi:ss') ]]>
+		</if>
+		<if test="UserAccountDTO.endDate!=null and UserAccountDTO.endDate!='' ">
+		<![CDATA[  and user_account.create_date  <=to_date(#{UserAccountDTO.endDate},'yyyy-mm-dd hh24:Mi:ss') ]]>
+		</if>
+
+	</select>
+
+	<select id="queryById" resultType="UserAccountDTO"
+		parameterType="String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM user_account
+		WHERE user_account_id = #{userAccountId}
+	</select>
+
+	<select id="queryListAll" resultType="UserAccountDTO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM user_account
+		WHERE
+		IS_ADMIN !='A' and STS !='P'
+	</select>
+	<select id="queryListForCommon" resultType="UserAccountDTO"
+		parameterType="String">
+
+		SELECT DISTINCT
+		sua.user_account_id,
+		sua.user_account_name
+		FROM
+		user_account sua,
+		SMS_RELEVANCE_ACCOUNT sra
+		WHERE
+		sua.user_account_id = SRA.user_account_id
+		AND SRA.STS = 'A' AND
+		SUA.IS_ADMIN != 'A'
+		AND (
+		SUA.IS_ADMIN != 'Y'
+		OR SUA.user_account_id =
+		#{uucid}
+		)
+		AND SRA.SMS_ACCOUNT_ID IN (
+		SELECT
+		SRA.SMS_ACCOUNT_ID
+		FROM
+		user_account sua,
+		SMS_RELEVANCE_ACCOUNT sra,
+		SMS_ACCOUNT sa
+		WHERE
+		sua.user_account_id = SRA.user_account_id
+		and
+		sa.SMS_ACCOUNT_ID=SRA.SMS_ACCOUNT_ID
+		and sa.SMS_ACCOUNT_TYPE='marke'
+		AND SRA.STS = 'A'
+		AND SUA.user_account_id = #{uucid}
+		)
+
+	</select>
+</mapper>
+

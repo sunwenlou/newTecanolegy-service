@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.sun.wen.lou.newtec.mapper.RoleMapper">
+
+	<sql id="Base_Column_List">
+		id ,
+		role ,
+		description,
+		resource_ids ,
+		available
+	</sql>
+	<!-- 批量添加 -->
+	<insert id="addByBatchRoleResource" parameterType="java.util.List">
+		insert into role_resource
+		(
+		role_id ,
+		resource_id ,
+		isAvaliable
+		)
+		<foreach collection="list" item="item" index="index"
+			separator="union">
+			SELECT
+			#{item.roleId} ,
+			#{item.resourceId} ,
+			#{item.isAvaliable}
+			FROM DUAL
+		</foreach>
+	</insert>
+
+
+	<insert id="createRole" parameterType="Role">
+		INSERT INTO sys_role (
+
+		<if test="role!=null and role!=''">
+			role ,
+		</if>
+		<if test="description!=null and description!=''">
+			description ,
+		</if>
+		<if test="resourceIds!=null and resourceIds!=''">
+			resource_ids ,
+		</if>
+			available
+		) VALUES (
+		<if test="role!=null and role!=''">
+			#{role} ,
+		</if>
+		<if test="description!=null and description!=''">
+			#{description} ,
+		</if>
+		<if test="resourceIds!=null and resourceIds!=''">
+			#{resourceIds} ,
+		</if>
+			#{available}
+		)
+	</insert>
+
+
+	<update id="updateRole" parameterType="Role">
+		UPDATE sys_role SET
+		<if test="role!=null and role!=''">
+			role =#{role},
+		</if>
+		<if test="description!=null and description!=''">
+			description = #{description},
+		</if>
+		<if test="resourceIds!=null and resourceIds!=''">
+			resource_ids = #{resourceIds},
+		</if>
+			available = #{available}
+		WHERE
+		<if test="id!=null and id!=''">
+			id = #{id}
+		</if>
+	</update>
+
+	<select id="findOne" resultType="Role" parameterType="long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_role
+		WHERE id = #{RoleId}
+	</select>
+
+	<select id="findAll" resultType="Role">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_role
+	</select>
+	<delete id="deleteRole" parameterType="string">
+		delete from
+		sys_role where
+		id=#{roleid}
+	</delete>
+	<delete id="deleteRoleResource" parameterType="string">
+		delete from
+		role_resource where
+		role_id=#{roleid}
+	</delete>
+
+
+	<select id="getRolelist" parameterType="Role" resultType="Role">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_role
+
+	</select>
+	<select id="findByRolename" parameterType="string" resultType="Role">
+	SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_role
+		where role=#{rolename}
+	</select>
+</mapper>
+

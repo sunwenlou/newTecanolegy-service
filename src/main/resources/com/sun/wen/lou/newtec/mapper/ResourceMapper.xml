@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.sun.wen.lou.newtec.mapper.ResourceMapper">
+
+	<sql id="Base_Column_List">
+		id ,
+		name ,
+		type,
+		url,
+		parent_id ,
+		parent_ids ,
+		permission,
+		available,
+
+		resourceFlag,
+		ID_TREE,
+		RESOURCE_DESC,
+		RESOURCE_SORT,
+		STATE
+	</sql>
+
+
+	<insert id="createResource" parameterType="Resource">
+		INSERT INTO sys_resource (
+
+		<if test="name!=null and name!=''">
+			name ,
+		</if>
+		<if test="type!=null and type!=''">
+			type ,
+		</if>
+		<if test="url!=null and url!=''">
+			url ,
+		</if>
+		<if test="permission!=null and permission!=''">
+			permission ,
+		</if>
+		<if test="parentId!=null and parentId!=''">
+			parent_id ,
+		</if>
+		<if test="parentIds!=null and parentIds!=''">
+			parent_ids ,
+		</if>
+		<if test="available!=null and available!=''">
+			available
+		</if>
+		<if test="resourceFlag!=null and resourceFlag!=''">
+			resourceFlag ,
+		</if>
+		<if test="idTree!=null and idTree!=''">
+			ID_TREE ,
+		</if>
+		<if test="resourceDesc!=null and resourceDesc!=''">
+			RESOURCE_DESC ,
+		</if>
+		STATE
+
+		) VALUES (
+		<if test="name!=null and name!=''">
+			#{name} ,
+		</if>
+		<if test="type!=null and type!=''">
+			#{type },
+		</if>
+		<if test="url!=null and url!=''">
+			#{url} ,
+		</if>
+		<if test="permission!=null and permission!=''">
+			#{permission} ,
+		</if>
+		<if test="parentId!=null and parentId!=''">
+			#{parentId} ,
+		</if>
+		<if test="parentIds!=null and parentIds!=''">
+			#{parentIds} ,
+		</if>
+		<if test="available!=null and available!=''">
+			#{available}
+		</if>
+
+		<if test="resourceFlag!=null and resourceFlag!=''">
+			#{resourceFlag} ,
+		</if>
+		<if test="idTree!=null and idTree!=''">
+			#{idTree} ,
+		</if>
+		<if test="resourceDesc!=null and resourceDesc!=''">
+			#{resourceDesc} ,
+		</if>
+			#{state}
+
+		)
+	</insert>
+
+
+	<update id="updateResource" parameterType="Resource">
+		UPDATE sys_resource SET
+		<if test="name!=null and name!=''">
+			name =#{name},
+		</if>
+		<if test="type!=null and type!=''">
+			type=#{type },
+		</if>
+
+		<if test="permission!=null and permission!=''">
+			permission= #{permission} ,
+		</if>
+
+
+
+		<if test="resourceFlag!=null and resourceFlag!=''">
+			resourceFlag=#{resourceFlag} ,
+		</if>
+		<if test="idTree!=null and idTree!=''">
+			ID_TREE= #{idTree} ,
+		</if>
+		<if test="resourceDesc!=null and resourceDesc!=''">
+			RESOURCE_DESC= #{resourceDesc} ,
+		</if>
+		<if test="resourceSort!=null and resourceSort!=''">
+			RESOURCE_SORT= #{resourceSort} ,
+		</if>
+		<if test="state!=null and state!=''">
+			STATE= #{state}
+		</if>
+		url=#{url}
+		WHERE
+		id = #{id}
+	</update>
+
+	<select id="findOne" resultType="Resource" parameterType="long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_resource
+		WHERE id = #{resourceIds}
+	</select>
+	<select id="findUserResource" parameterType="string" resultType="Resource">
+		select r.* from sys_resource r,sys_user u,sys_role ro,user_role ur,
+		role_resource rr
+		where r.id=rr.resource_id and
+		rr.role_id=ro.id and
+		rr.isAvaliable=1 and
+
+		u.id=ur.userid and ur.roleid=ro.id and
+		ur.isAvaliable=1 and u.username=#{username}
+
+	</select>
+	<select id="findAll" resultType="Resource">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_resource
+	</select>
+	<delete id="deleteResource" parameterType="long">
+		delete from
+		sys_resource where id=#{resourceId}
+	</delete>
+
+	<delete id="deleteRoleResource" parameterType="long">
+
+		delete from
+		role_resource where resource_id=#{resourceId}
+	</delete>
+	<select id="isExistFlag" parameterType="string" resultType="Resource">
+
+		select
+		<include refid="Base_Column_List" />
+		FROM sys_resource
+		where
+		resourceFlag=#{resourceFlag}
+	</select>
+	<select id="queryResourceByTag" resultType="Resource">
+
+		select
+		<include refid="Base_Column_List" />
+		FROM sys_resource
+		where
+		parent_id = #{resourceId}
+		<if test="searchName != null">
+			and
+			${searchName} like #{searchValue}
+		</if>
+
+	</select>
+
+	<select id="queryResource" parameterType="long"  resultType="Resource">
+
+		select
+		<include refid="Base_Column_List" />
+		FROM sys_resource
+
+		<if test="resourceId != null">
+			WHERE parent_id = #{resourceId}
+		</if>
+
+	</select>
+	
+	<select id="queryChildren" parameterType="long" resultType="Resource">
+	
+		select
+		<include refid="Base_Column_List" />
+		FROM sys_resource
+			WHERE parent_id = #{resourceId}
+	</select>
+	
+	<select id="queryRoleResource" resultType="RoleResource">
+	
+	select role_id,resource_id from role_resource
+	where 1=1
+	<if test="roleId != null and roleId !='' " >
+  	 	and role_id = #{roleId} 
+  	</if>
+  	<if test="resourceId != null and resourceId !='' " >
+  	 	and resource_id = #{resourceId} 
+  	</if>
+	</select>
+</mapper>
+

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.sun.wen.lou.newtec.mapper.UserMapper">
+
+	<sql id="Base_Column_List">
+		id ,
+		organization_id,
+		role_ids_str ,
+		username ,
+		password,
+		locked
+	</sql>
+
+
+
+
+
+	<!-- 批量添加 -->
+	<insert id="addByBatchUserRole" parameterType="java.util.List">
+		insert into user_role
+		(
+		userid ,
+		roleid ,
+		isAvaliable 
+		)
+		<foreach collection="list" item="item" index="index"
+			separator="union">
+			SELECT
+			#{item.userId} ,
+			#{item.roleId} ,
+			#{item.isAvaliable} 
+			FROM DUAL
+		</foreach>
+	</insert>
+	
+	<insert id="createUser" parameterType="User">
+		INSERT INTO sys_user (
+
+		<if test="username!=null and username!=''">
+			username ,
+		</if>
+		<if test="organizationId!=null and organizationId!=''">
+			organization_id ,
+		</if>
+		<if test="roleIdsStr!=null and roleIdsStr!=''">
+			role_ids_str ,
+		</if>
+
+		<if test="password!=null and password!=''">
+			password ,
+		</if>
+			locked
+		) VALUES (
+		<if test="username!=null and username!=''">
+			#{username} ,
+		</if>
+		<if test="organizationId!=null and organizationId!=''">
+			#{organizationId} ,
+		</if>
+
+		<if test="roleIdsStr!=null and roleIdsStr!=''">
+			#{roleIdsStr} ,
+		</if>
+		<if test="password!=null and password!=''">
+			#{password} ,
+		</if>
+			#{locked}
+		)
+	</insert>
+
+
+	<update id="updateUser" parameterType="User">
+		UPDATE sys_user SET
+		<if test="username!=null and username!=''">
+			username =#{username},
+		</if>
+		<if test="roleIdsStr!=null and roleIdsStr!=''">
+			role_ids_str = #{roleIdsStr},
+		</if>
+		<if test="organizationId!=null and organizationId!=''">
+			organization_id = #{organizationId},
+		</if>
+
+		<if test="password!=null and password!=''">
+			password= #{password} ,
+		</if>
+
+			locked = #{locked}
+		WHERE
+		<if test="id!=null and id!=''">
+			id = #{id}
+		</if>
+	</update>
+	<select id="findByUsername" parameterType="string" resultType="User">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_user
+		WHERE username = #{username}
+	</select>
+	<select id="findOne" resultType="User" parameterType="long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_user
+		WHERE id = #{userId}
+	</select>
+
+	<select id="findAll" resultType="User">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_user
+	</select>
+
+	<select id="getUsers" parameterType="User" resultType="User">
+		select u.*,ro.description roleNames from sys_user u,sys_role
+		ro,user_role ur
+		where u.id=ur.userid and ur.roleid=ro.id and ur.isAvaliable=1
+		<if test="user.username!=null and user.username!=''">
+			and u.username =#{user.username}
+		</if>
+		<if test="user.organizationId!=null and user.organizationId!=''">
+			and u.organization_id = #{user.organizationId}
+		</if>
+	</select>
+	<delete id="deleteUser" parameterType="long">
+		delete from
+		sys_user where
+		id=#{userId}
+	</delete>
+	<delete id="deleteUserRole" parameterType="User">
+	delete from user_role where userid=#{user.id}
+	</delete>
+</mapper>
+
