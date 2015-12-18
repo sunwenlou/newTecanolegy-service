@@ -1,8 +1,11 @@
 package com.sun.wen.lou.newtec.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
@@ -16,6 +19,8 @@ import com.sun.wen.lou.newtec.entity.RoleResource;
 import com.sun.wen.lou.newtec.mapper.ResourceMapper;
 import com.sun.wen.lou.newtec.service.ResourceService;
 import com.sun.wen.lou.newtec.util.PageController;
+import com.sun.wen.lou.newtec.util.RedisClient;
+import com.sun.wen.lou.newtec.util.SerializationUtil;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -100,27 +105,46 @@ public class ResourceServiceImpl implements ResourceService {
 
 	/**
 	 * 根据用户名查询用户的资源
-	 * 
+	 * redis保存序列化菜单啊
 	 * @param username
 	 * @return
 	 */
 	public List<Resource> findUserResource(String username) {
-		List<Resource> allResources = resourceMapper.findUserResource(username);
+
 		List<Resource> menus = new ArrayList<Resource>();
-		for (Resource resource : allResources) {
-			if (resource.isRootNode()) {
-				continue;
+		Map<byte[], byte[]> temp=RedisClient.getJc().hgetAll(username.getBytes());
+
+		Date d1=new Date();
+		if ( temp.isEmpty()) {
+			List<Resource> allResources = resourceMapper
+					.findUserResource(username);
+			for (Resource resource : allResources) {
+				if (resource.isRootNode()) {
+					continue;
+				}
+				if (!"menu".equals(resource.getType())) {
+					continue;
+				}
+				/*
+				 * if (!hasPermission(permissions, resource)) { continue; }
+				 */
+				menus.add(resource);
+				RedisClient.getJc().hset(username.getBytes(), resource.getId().toString().getBytes(),SerializationUtil.serialize(resource));
+				
 			}
-			if (!"menu".equals(resource.getType())) {
-				continue;
+			System.out.println(("redis")+((new Date()).getTime()-d1.getTime()));
+			
+		}else{
+			Collection<	byte[]> valueset=temp.values();
+			for(byte[] re:valueset){
+				Resource resource=(Resource)SerializationUtil.deserialize(re);
+
+				menus.add(resource);
 			}
-			/*
-			 * if (!hasPermission(permissions, resource)) { continue; }
-			 */
-			menus.add(resource);
+			System.out.println("serial"+((new Date()).getTime()-d1.getTime()));
+			
 		}
 		return menus;
-
 	}
 
 	/**

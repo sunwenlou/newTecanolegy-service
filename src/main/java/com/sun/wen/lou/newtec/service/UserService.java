@@ -4,7 +4,6 @@ package com.sun.wen.lou.newtec.service;
 import java.util.List;
 import java.util.Set;
 
-
 import com.sun.wen.lou.newtec.entity.User;
 import com.sun.wen.lou.newtec.entity.UserRole;
 import com.sun.wen.lou.newtec.util.PageController;
@@ -73,5 +72,6 @@ public interface UserService {
      * @return
      */
     public  int deleteUserRole(User user);
+	public User queryUserAccount(User user);
 
 }

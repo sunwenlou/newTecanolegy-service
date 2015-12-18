@@ -16,7 +16,11 @@
 	</sql>
 
 
-
+	<select id="queryUserAccount" parameterType="User"
+		resultType="User">
+		select * from sys_user where username=#{username} and
+		password=#{password}
+	</select>
 
 
 	<!-- 批量添加 -->
@@ -25,18 +29,18 @@
 		(
 		userid ,
 		roleid ,
-		isAvaliable 
+		isAvaliable
 		)
 		<foreach collection="list" item="item" index="index"
 			separator="union">
 			SELECT
 			#{item.userId} ,
 			#{item.roleId} ,
-			#{item.isAvaliable} 
+			#{item.isAvaliable}
 			FROM DUAL
 		</foreach>
 	</insert>
-	
+
 	<insert id="createUser" parameterType="User">
 		INSERT INTO sys_user (
 
@@ -53,7 +57,7 @@
 		<if test="password!=null and password!=''">
 			password ,
 		</if>
-			locked
+		locked
 		) VALUES (
 		<if test="username!=null and username!=''">
 			#{username} ,
@@ -68,7 +72,7 @@
 		<if test="password!=null and password!=''">
 			#{password} ,
 		</if>
-			#{locked}
+		#{locked}
 		)
 	</insert>
 
@@ -89,7 +93,7 @@
 			password= #{password} ,
 		</if>
 
-			locked = #{locked}
+		locked = #{locked}
 		WHERE
 		<if test="id!=null and id!=''">
 			id = #{id}
@@ -117,7 +121,8 @@
 	<select id="getUsers" parameterType="User" resultType="User">
 		select u.*,ro.description roleNames from sys_user u,sys_role
 		ro,user_role ur
-		where u.id=ur.userid and ur.roleid=ro.id and ur.isAvaliable=1
+		where u.id=ur.userid and ur.roleid=ro.id and
+		ur.isAvaliable=1
 		<if test="user.username!=null and user.username!=''">
 			and u.username =#{user.username}
 		</if>
@@ -131,7 +136,7 @@
 		id=#{userId}
 	</delete>
 	<delete id="deleteUserRole" parameterType="User">
-	delete from user_role where userid=#{user.id}
+		delete from user_role where userid=#{user.id}
 	</delete>
 </mapper>
 

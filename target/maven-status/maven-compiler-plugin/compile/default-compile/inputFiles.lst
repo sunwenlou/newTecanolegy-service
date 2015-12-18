@@ -5,11 +5,12 @@ E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\service\RoleService.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\service\RedisService.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\PageDto.java
+E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\RedisClient.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\shiro\SecurityUsers.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\redis\SerializeUtils.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\FrmJdbcTemplate.java
-E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\redis\RedisInfo.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\entity\User.java
+E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\redis\RedisInfo.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\JsonUtils.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\dto\ResourceUucDTO.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\service\impl\ResourceServiceImpl.java
@@ -44,8 +45,8 @@ E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\entity\Role.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\CallableStatementCallbackImpl.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\FrmRowMapper.java
-E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\JsonResult.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\service\UserAccountService.java
+E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\JsonResult.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\shiro\ISecurityUsersFinder.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\entity\Organization.java
 E:\CHECKSUN\eclipseWorkspace20150824\newTecanolegy-service\src\main\java\com\sun\wen\lou\newtec\util\PageInterceptor.java

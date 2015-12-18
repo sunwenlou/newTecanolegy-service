@@ -205,4 +205,10 @@ public class UserServiceImpl implements UserService {
     public  int deleteUserRole(User user){
     	return userMapper.deleteUserRole(user);
     }
+
+	@Override
+	public User queryUserAccount(User user) {
+		// TODO Auto-generated method stub
+		return userMapper.queryUserAccount(user);
+	}
 }

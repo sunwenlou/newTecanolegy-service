@@ -63,5 +63,6 @@ public interface UserMapper {
     public void addByBatchUserRole(List<UserRole> list);
     
     public  int deleteUserRole(@Param("user")User user);
+	public User queryUserAccount(User user);
 
 }
