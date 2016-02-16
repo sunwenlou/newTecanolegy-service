@@ -42,7 +42,7 @@ public interface ResourceMapper {
 	 * @param username
 	 * @return
 	 */
-	public List<Resource> findUserResource(String username);
+	public List<Resource> findUserResource(@Param("username") String username);
 
 	/**
 	 * 查询是否存在

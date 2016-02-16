@@ -91,7 +91,7 @@
 		<if test="resourceDesc!=null and resourceDesc!=''">
 			#{resourceDesc} ,
 		</if>
-			#{state}
+		#{state}
 
 		)
 	</insert>
@@ -144,9 +144,13 @@
 		where r.id=rr.resource_id and
 		rr.role_id=ro.id and
 		rr.isAvaliable=1 and
+		u.id=ur.userid and
+		ur.roleid=ro.id and
+		ur.isAvaliable=1
+		<if test="username!=null and username!=''">
+			and u.username=#{username}
+		</if>
 
-		u.id=ur.userid and ur.roleid=ro.id and
-		ur.isAvaliable=1 and u.username=#{username}
 
 	</select>
 	<select id="findAll" resultType="Resource">
@@ -186,7 +190,7 @@
 
 	</select>
 
-	<select id="queryResource" parameterType="long"  resultType="Resource">
+	<select id="queryResource" parameterType="long" resultType="Resource">
 
 		select
 		<include refid="Base_Column_List" />
@@ -197,25 +201,25 @@
 		</if>
 
 	</select>
-	
+
 	<select id="queryChildren" parameterType="long" resultType="Resource">
-	
+
 		select
 		<include refid="Base_Column_List" />
 		FROM sys_resource
-			WHERE parent_id = #{resourceId}
+		WHERE parent_id = #{resourceId}
 	</select>
-	
+
 	<select id="queryRoleResource" resultType="RoleResource">
-	
-	select role_id,resource_id from role_resource
-	where 1=1
-	<if test="roleId != null and roleId !='' " >
-  	 	and role_id = #{roleId} 
-  	</if>
-  	<if test="resourceId != null and resourceId !='' " >
-  	 	and resource_id = #{resourceId} 
-  	</if>
+
+		select role_id,resource_id from role_resource
+		where 1=1
+		<if test="roleId != null and roleId !='' ">
+			and role_id = #{roleId}
+		</if>
+		<if test="resourceId != null and resourceId !='' ">
+			and resource_id = #{resourceId}
+		</if>
 	</select>
 </mapper>
 

@@ -18,6 +18,7 @@ import com.sun.wen.lou.newtec.entity.Resource;
 import com.sun.wen.lou.newtec.entity.RoleResource;
 import com.sun.wen.lou.newtec.mapper.ResourceMapper;
 import com.sun.wen.lou.newtec.service.ResourceService;
+import com.sun.wen.lou.newtec.util.JsonUtils;
 import com.sun.wen.lou.newtec.util.PageController;
 import com.sun.wen.lou.newtec.util.RedisClient;
 import com.sun.wen.lou.newtec.util.SerializationUtil;
@@ -130,7 +131,12 @@ public class ResourceServiceImpl implements ResourceService {
 				 */
 				menus.add(resource);
 				RedisClient.getJc().hset(username.getBytes(), resource.getId().toString().getBytes(),SerializationUtil.serialize(resource));
-				
+				try {
+					RedisClient.getJc().append("$$$"+username, JsonUtils.getJsonForString(resource));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			System.out.println(("redis")+((new Date()).getTime()-d1.getTime()));
 			
